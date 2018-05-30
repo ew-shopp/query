@@ -3,9 +3,10 @@
 //    FILTER 'https://www.google.com/rdf#AdWord' IN keyword.type
 //    LIMIT 1,2
 //    RETURN keyword)
+LET keywordId = CONCAT('JOT-campaigns-germany/', @campaign_key)
 LET cityDatePairs = (
     //FOR kw IN keywords
-        FOR keywordMatch IN 1..1 OUTBOUND CONCAT('JOT-campaigns-germany/', @campaign_key) GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
+        FOR keywordMatch IN 1..1 OUTBOUND keywordId GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
             FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type
             RETURN {cityName: keywordMatch.`jot:inCityName`, date: keywordMatch.`dbp:date`, matchKey: keywordMatch._key}
 )
@@ -36,15 +37,16 @@ LET weatherData = (
 )
 
 //FOR kw IN keywords
-    FOR keywordMatch IN 1..1 OUTBOUND CONCAT('JOT-campaigns-germany/', @campaign_key) GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
+    FOR keywordMatch IN 1..1 OUTBOUND keywordId GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
         FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type
         SORT keywordMatch.`dbp:date`
         RETURN {
             //label: kw.label, 
             date: keywordMatch.`dbp:date`,
+            regionID: keywordMatch.`jot:belongsToRegionId`,
             city: keywordMatch.`jot:inCityName`,
             matchType: keywordMatch.`google:matchType`,
-            clicks: keywordMatch.`google:numberOfImpressions`, 
+            clicks: keywordMatch.`google:numberOfClicks`, 
             impressions: keywordMatch.`google:numberOfImpressions`,
             adPosition: keywordMatch.`google:adPosition`,
             weather: REMOVE_VALUE(weatherData[*][keywordMatch._key], null)[0]
