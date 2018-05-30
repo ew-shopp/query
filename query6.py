@@ -65,24 +65,35 @@ campaign_keys = read_campaign_keys_from_json('1m10small.json')
 print('** List of Requested Keys is:')
 print(campaign_keys)
 
-print('// Loading Query')
-qry = read_query_from_file('query6.aql')
-print('** Query:')
-print(qry)
+print('// Looping Over Campaign Keys')
+print('')
+for campaign_key in campaign_keys:
+    t00 = time.time()
 
-print("// Excecuting Query for Campaign Key %i" % campaign_keys[0])
-queryResult = run_query(db, qry, campaign_key=campaign_keys[0])
+    print("**** Running Query/Fetch/Save for Campaign Key %i" % campaign_key)
 
-print("** Query Returned %i Records" % queryResult.count)
-print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
-print('// Fetching Resulting. Wallclock Ticking.')
-result_list = query_to_result_list(queryResult)
+    print('// Loading Query')
+    qry = read_query_from_file('query6.aql')
+    print('** Query:')
+    print(qry)
 
-fname = "result_%i.json" % campaign_keys[0]
-print("// Writing Result to File (%s)" % fname)
-t0 = time.time()
-result_list_to_file(result_list, fname)
-t1 = time.time()
-print("** Took %.1fs" % (t1-t0))
+    print("// Excecuting Query for Campaign Key %i" % campaign_key)
+    queryResult = run_query(db, qry, campaign_key=campaign_key)
+
+    print("** Query Returned %i Records" % queryResult.count)
+    print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
+    print('// Fetching Resulting. Wallclock Ticking.')
+    result_list = query_to_result_list(queryResult)
+
+    fname = "result_%i.json" % campaign_key
+    print("// Writing Result to File (%s)" % fname)
+    t0 = time.time()
+    result_list_to_file(result_list, fname)
+    t1 = time.time()
+    print("** Took %.1fs" % (t1-t0))
+
+    print("**** Finished for Campaign Key %i" % campaign_key)
+    print("**** Round-Trip Time %.1fs" % (time.time() - t00))
+    print('')
 
 print('!! Done')
