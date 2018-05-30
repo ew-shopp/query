@@ -52,7 +52,7 @@ print('// Connecting to Database')
 db = connect_to_database()
 
 print('// Loading Query')
-qry = read_query_from_file('query5.aql')
+qry = read_query_from_file('query6.aql')
 print('** Query:')
 print(qry)
 
