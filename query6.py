@@ -23,9 +23,9 @@ def read_query_from_file(fname):
 # https://docs.arangodb.com/3.3/AQL/Fundamentals/BindParameters.html
 # do note the peculiarities about string processing
 # also see query6.aql
-def run_query(db, qry):
+def run_query(db, qry, campaign_key=546426629):
     queryResult = db.AQLQuery(qry, rawResults=True, batchSize=64, count=True, \
-                              bindVars={'campaign_key': '546426629'})
+                              bindVars={'campaign_key': campaign_key})
     return queryResult
 
 
