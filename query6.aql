@@ -1,0 +1,51 @@
+// LET keywords = []
+//(FOR keyword IN `JOT-campaigns-germany`
+//    FILTER 'https://www.google.com/rdf#AdWord' IN keyword.type
+//    LIMIT 1,2
+//    RETURN keyword)
+LET cityDatePairs = (
+    //FOR kw IN keywords
+        FOR keywordMatch IN 1..1 OUTBOUND CONCAT('JOT-campaigns-germany/', @campaign_key) GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
+            FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type
+            RETURN {cityName: keywordMatch.`jot:inCityName`, date: keywordMatch.`dbp:date`, matchKey: keywordMatch._key}
+)
+LET weatherData = (
+    FOR pair IN cityDatePairs
+        LET pairMeasurements = (
+            FOR measurement IN `weather-2017-germany-jot-combined`
+                FILTER measurement.cityName == LOWER(pair.cityName) && measurement.validTime == CONCAT(pair.date, 'T00:00:00Z')
+                SORT measurement.validityDateTime
+                RETURN {
+                    "validityDateTime": measurement.validityDateTime,
+                    "10u": measurement.`10u`,
+                    "2d": measurement.`2d`, 
+                    "2t": measurement.`2t`, 
+                    "dsrp": measurement.`dsrp`, 
+                    "sd": measurement.`sd`, 
+                    "sf": measurement.`sf`, 
+                    "sp": measurement.`sp`, 
+                    "ssr": measurement.`ssr`, 
+                    "10v": measurement.`10v`, 
+                    "sund": measurement.`sund`, 
+                    "tcc": measurement.`tcc`, 
+                    "tp": measurement.`tp`, 
+                    "vis": measurement.`vis`
+                }
+        )
+    RETURN {[pair.matchKey]: pairMeasurements}
+)
+
+//FOR kw IN keywords
+    FOR keywordMatch IN 1..1 OUTBOUND CONCAT('JOT-campaigns-germany/', @campaign_key) GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
+        FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type
+        SORT keywordMatch.`dbp:date`
+        RETURN {
+            //label: kw.label, 
+            date: keywordMatch.`dbp:date`,
+            city: keywordMatch.`jot:inCityName`,
+            matchType: keywordMatch.`google:matchType`,
+            clicks: keywordMatch.`google:numberOfImpressions`, 
+            impressions: keywordMatch.`google:numberOfImpressions`,
+            adPosition: keywordMatch.`google:adPosition`,
+            weather: REMOVE_VALUE(weatherData[*][keywordMatch._key], null)[0]
+        }
