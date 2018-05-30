@@ -10,11 +10,15 @@ def connect_to_database():
     return db
 
 
+def read_query_from_file(fname):
+    with open(fname, 'r') as f:
+        lines = f.readlines()
+    qry = ''.join(lines)
+    return qry
+
+
 # run query against database
-def run_query(db):
-    qry = "FOR keywordMatch IN 1..1 OUTBOUND 'JOT-campaigns-germany/546426629' GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'} "
-    qry += "FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type "
-    qry += "RETURN {cityName: keywordMatch.`jot:inCityName`, date: keywordMatch.`dbp:date`, matchKey: keywordMatch._key}"
+def run_query(db, qry):
     queryResult = db.AQLQuery(qry, rawResults=True, batchSize=64, count=True)
     return queryResult
 
@@ -41,8 +45,13 @@ def result_list_to_file(result_list, fname):
 print('// Connecting to Database')
 db = connect_to_database()
 
+print('// Loading Query')
+qry = read_query_from_file('query4.aql')
+print('** Query:')
+print(qry)
+
 print('// Excecuting Query')
-queryResult = run_query(db)
+queryResult = run_query(db, qry)
 
 print("** Query Returned %i Records" % queryResult.count)
 print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])

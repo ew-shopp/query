@@ -1,0 +1,3 @@
+FOR keywordMatch IN 1..1 OUTBOUND 'JOT-campaigns-germany/546426629' GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'}
+FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type 
+RETURN {cityName: keywordMatch.`jot:inCityName`, date: keywordMatch.`dbp:date`, matchKey: keywordMatch._key}
