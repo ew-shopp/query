@@ -81,7 +81,10 @@ for campaign_key in campaign_keys:
     queryResult = run_query(db, qry, campaign_key=campaign_key)
 
     print("** Query Returned %i Records" % queryResult.count)
-    print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
+    if queryResult.response['cached'] == True:
+        print("** Query Was Cached")
+    else:
+        print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
     print('// Fetching Resulting. Wallclock Ticking.')
     result_list = query_to_result_list(queryResult)
 
