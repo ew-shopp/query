@@ -10,6 +10,15 @@ def connect_to_database():
     return db
 
 
+def read_campaign_keys_from_json(fname):
+    with open(fname, 'r') as f:
+        json_of_keywords = json.load(f)
+    campaign_keys = []
+    for json_of_keyword in json_of_keywords:
+        campaign_keys.append(int(json_of_keyword['key']))
+    return campaign_keys
+
+
 def read_query_from_file(fname):
     with open(fname, 'r') as f:
         lines = f.readlines()
@@ -51,20 +60,25 @@ def result_list_to_file(result_list, fname):
 print('// Connecting to Database')
 db = connect_to_database()
 
+print('// Loading Campaign Keys')
+campaign_keys = read_campaign_keys_from_json('1m10small.json')
+print('** List of Requested Keys is:')
+print(campaign_keys)
+
 print('// Loading Query')
 qry = read_query_from_file('query6.aql')
 print('** Query:')
 print(qry)
 
-print('// Excecuting Query')
-queryResult = run_query(db, qry)
+print("// Excecuting Query for Campaign Key %i" % campaign_keys[0])
+queryResult = run_query(db, qry, campaign_key=campaign_keys[0])
 
 print("** Query Returned %i Records" % queryResult.count)
 print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
 print('// Fetching Resulting. Wallclock Ticking.')
 result_list = query_to_result_list(queryResult)
 
-fname = "test.json"
+fname = "result_%i.json" % campaign_keys[0]
 print("// Writing Result to File (%s)" % fname)
 t0 = time.time()
 result_list_to_file(result_list, fname)
