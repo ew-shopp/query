@@ -71,6 +71,7 @@ for campaign_key in campaign_keys:
     t00 = time.time()
 
     print("**** Running Query/Fetch/Save for Campaign Key %i" % campaign_key)
+    print(">>>> %s UTC" % time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
 
     print('// Loading Query')
     qry = read_query_from_file('query6.aql')
@@ -97,6 +98,7 @@ for campaign_key in campaign_keys:
 
     print("**** Finished for Campaign Key %i" % campaign_key)
     print("**** Round-Trip Time %.1fs" % (time.time() - t00))
+    print(">>>> %s UTC" % time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
     print('')
 
 print('!! Done')
