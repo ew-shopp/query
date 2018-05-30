@@ -18,8 +18,14 @@ def read_query_from_file(fname):
 
 
 # run query against database
+# for Bind Parameters (aka bindVars), see
+# https://github.com/tariqdaouda/pyArango#queries--aql
+# https://docs.arangodb.com/3.3/AQL/Fundamentals/BindParameters.html
+# do note the peculiarities about string processing
+# also see query5.aql
 def run_query(db, qry):
-    queryResult = db.AQLQuery(qry, rawResults=True, batchSize=64, count=True)
+    queryResult = db.AQLQuery(qry, rawResults=True, batchSize=64, count=True, \
+                              bindVars={'campaign_key': '546426629'})
     return queryResult
 
 
