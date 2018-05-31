@@ -2,6 +2,7 @@ from __future__ import print_function
 import pyArango.connection
 import json
 import time
+import argparse
 
 
 def connect_to_database():
@@ -57,11 +58,17 @@ def result_list_to_file(result_list, fname):
         json.dump(result_list, f)
 
 
+print('// Parsing Arguments')
+parser = argparse.ArgumentParser()
+parser.add_argument('--keyfile', default='1m10small.json', \
+                    help='Name of JSON File w/ Campaign Keys.')
+args = parser.parse_args()
+
 print('// Connecting to Database')
 db = connect_to_database()
 
-print('// Loading Campaign Keys')
-campaign_keys = read_campaign_keys_from_json('1m10small.json')
+print("// Loading Campaign Keys (%s)" % args.keyfile)
+campaign_keys = read_campaign_keys_from_json(args.keyfile)
 print('** List of Requested Keys is:')
 print(campaign_keys)
 
