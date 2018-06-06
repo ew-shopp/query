@@ -12,7 +12,7 @@
 
 0. Install dependencies
 1. Edit your query as appropriate (`query.aql`)
-2. Open `query.py`, find the connect_to_database() function, make sure you're connecting to the correct database and port.
+2. Open `query.py`, find the `connect_to_database()` function, make sure you're connecting to the correct database and port.
 3. Make sure you have a list of keywords IDs you want to query for. For example, you could have file `keywords.json` looking like:
 
 ```
