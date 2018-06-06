@@ -1,3 +1,10 @@
+"""
+Script to Query ArangoDB. See README.md.
+
+Author: Volker Hoffman <volker.hoffmann@sintef.no>
+Update: 06 June 2018
+"""
+
 from __future__ import print_function
 import pyArango.connection
 import json
