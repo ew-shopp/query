@@ -9,7 +9,9 @@ print(conn.databases)
 db = conn['_system']
 print(db)
 
-qry = "FOR keywordMatch IN 1..1 OUTBOUND 'JOT-campaigns-germany/546426629' GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'} "
+campaign_id = 3317658057 # may be cached
+# campaign_id = 546426629  # will never be cached (why???)
+qry = "FOR keywordMatch IN 1..1 OUTBOUND 'JOT-campaigns-germany/%i' GRAPH 'JOT-campaigns-germany' OPTIONS {bfs: true, uniqueVertices: 'global'} " % campaign_id
 qry += "FILTER 'https://www.google.com/rdf#AdWordMatch' IN keywordMatch.type "
 qry += "RETURN {cityName: keywordMatch.`jot:inCityName`, date: keywordMatch.`dbp:date`, matchKey: keywordMatch._key}"
 print(qry)
@@ -23,6 +25,9 @@ print('count:', queryResult.count)
 print('###')
 pp.pprint(queryResult.response)
 print('###')
+
+if queryResult.response['cached'] == True:
+    print('CACHED')
 
 # this loops over all results in batches of batchSize
 # print('***')
