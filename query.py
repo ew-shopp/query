@@ -45,10 +45,12 @@ def query_to_result_list(queryResult):
     for ii, qq in enumerate(queryResult):
         if ii % 5000 == 0:
             t1 = time.time()
-            print("** Fetched %07d/%07d Records (%.1fs Elapsed)" % (ii, queryResult.count, t1-t0))
+            print("** Fetched %07d/%07d Records (%.1fs Elapsed)" % \
+                  (ii, queryResult.count, t1-t0))
         result_list.append(qq)
     t1 = time.time()
-    print("** Fetched %06d/%06d Records (%.1fs Elapsed)" % (ii+1, queryResult.count, t1-t0))
+    print("** Fetched %06d/%06d Records (%.1fs Elapsed)" % \
+          (ii+1, queryResult.count, t1-t0))
     return result_list
 
 
@@ -92,7 +94,8 @@ for campaign_key in campaign_keys:
     if queryResult.response['cached'] == True:
         print("** Query Was Cached")
     else:
-        print("** Query Took %.2f Seconds" % queryResult.response['extra']['stats']['executionTime'])
+        print("** Query Took %.2f Seconds" % \
+              queryResult.response['extra']['stats']['executionTime'])
     print('// Fetching Resulting. Wallclock Ticking.')
     result_list = query_to_result_list(queryResult)
 
