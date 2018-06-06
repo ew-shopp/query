@@ -32,7 +32,7 @@ def read_query_from_file(fname):
 # https://github.com/tariqdaouda/pyArango#queries--aql
 # https://docs.arangodb.com/3.3/AQL/Fundamentals/BindParameters.html
 # do note the peculiarities about string processing
-# also see query6.aql
+# also see query.aql
 def run_query(db, qry, campaign_key=546426629):
     queryResult = db.AQLQuery(qry, rawResults=True, batchSize=64, count=True, \
                               bindVars={'campaign_key': campaign_key})
@@ -81,7 +81,7 @@ for campaign_key in campaign_keys:
     print(">>>> %s UTC" % time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
 
     print('// Loading Query')
-    qry = read_query_from_file('query6.aql')
+    qry = read_query_from_file('query.aql')
     print('** Query:')
     print(qry)
 
